@@ -26,16 +26,21 @@ ux = 0 #initial velocity x
 uy = 0 #initial velocity y
 uz = 0 #initial velocity z
 
-vx = 0 #final velocity
+accXx = 0
+accXy = 0
+accXz = 0
 
 t = 0.102 #time between readings
 
 
 sphereVector = vector(0,0,0)
 
-sphere1 = sphere(pos = sphereVector, radius = 0.5, color = color.orange, make_trail=True)
+sphere1 = sphere(pos = sphereVector, radius = 1, color = color.orange, make_trail=True)
 
-varr = arrow(pos=sphere1.pos, axis=vector(sx+3,sy+3,sz+3), color=color.yellow, round=True) 
+xarr = arrow(pos=sphere1.pos, axis=vector(accXx,0,0), shaftwidth = .25, headwidth = 0.3, color=color.red, round=True) 
+yarr = arrow(pos=sphere1.pos, axis=vector(0,accXy,0), shaftwidth = .25, headwidth = 0.3, color=color.green, round=True) 
+zarr = arrow(pos=sphere1.pos, axis=vector(0,0,accXz), shaftwidth = .25, headwidth = 0.3, color=color.blue, round=True) 
+
 
 # sample of data: "  -1184   3120 -15824"
 
@@ -58,9 +63,7 @@ def filteredLine(line):
     accY = ""
     accZ = ""
 
-    accXx = 0
-    accXy = 0
-    accXz = 0
+    
 
     pitch = ""
     roll = ""
@@ -98,18 +101,18 @@ def filteredLine(line):
         # conversion factor of 16, because the lowest 4 bits of the accelerometer's readings are 0.
 
 
-    accX = (float(accX) / -16 / 1000 * 9.81) - previousx #m/s^2
-    accY = (float(accY) / -16 / 1000 * 9.81) - previousy #m/s^2
+    accX = (float(accX) / -16 / 1000 * 9.81) * 100 - previousx #cm/s^2
+    accY = (float(accY) / -16 / 1000 * 9.81) * 100 - previousy #cm/s^2
 
-    accZ = (float(accZ) / -16 / 1000 * 9.81) - previousz #m/s^2
+    accZ = (float(accZ) / -16 / 1000 * 9.81) * 100 - previousz #cm/s^2
 
     previousx = accX
     previousy = accY
     previousz = accZ
 
-    accXy = (float(accX)*sin(math.radians(float(pitch))))
-    accXx = (float(accX)*cos(math.radians(float(pitch)))*cos(math.radians(float(yaw))))
-    accXz = (float(accX)*cos(math.radians(float(pitch)))*sin(math.radians(float(yaw))))
+    accXy = accY #(float(accX)*sin(math.radians(float(pitch))))
+    accXx = accX #(float(accX)*cos(math.radians(float(pitch)))*cos(math.radians(float(yaw))))
+    accXz = accZ #(float(accX)*cos(math.radians(float(pitch)))*sin(math.radians(float(yaw))))
 
 for x in f:
     filteredLine(x)
@@ -120,14 +123,21 @@ for x in f:
     sy = (uy*t)+(0.5*accXy)*t**2
     sz = (uz*t)+(0.5*accXz)*t**2
 
-    ux = ux + accXx
-    uy = uy + accXy
-    uz = uz + accXz
+    ux = ux + accXx*t
+    uy = uy + accXy*t
+    uz = uz + accXz*t
 
 
     sphere1.pos = vector(sx, sy, sz)
-    varr.pos = vector(sx, sy, sz)
-    varr.axis = vector(ux,uy,uz)
+
+    xarr.pos = vector(sx, sy, sz)
+    yarr.pos = vector(sx, sy, sz)
+    zarr.pos = vector(sx, sy, sz)
+
+    xarr.axis = vector(accXx*t,0,0)
+    yarr.axis = vector(0,accXy*t,0)
+    zarr.axis = vector(0,0,accXz*t)
+    
 
     # sphereVector.x = sx
     # sphereVector.y = sy
@@ -135,7 +145,8 @@ for x in f:
 
     # sphere1.pos = sphereVector
     # arrow1.pos = sphereVector
-    scene.center = sphere1.pos
+    scene.camera.follow(sphere1)
+
 
     print(sx, sy, sz, pitch, roll, yaw)
     time.sleep(0.05)
