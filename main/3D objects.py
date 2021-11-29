@@ -6,7 +6,7 @@ import math
 
 import time
 
-data = Path(r'data.txt')
+data = Path(r'main/data.txt')
 
 f = open(data, "r")
 
