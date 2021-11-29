@@ -31,15 +31,26 @@ at this FS setting, so the value of -1009 corresponds to -1009 * 1 =
 
 #include <stdio.h>
 #include <time.h>
-#include <SimpleKalmanFilter.h>
+//#include <SimpleKalmanFilter.h>
+
+#include <Wire.h>
+#include <Adafruit_BMP280.h>
+
+#define SEALEVELPRESSURE_HPA (997) //make sure to calibrate this value before launch, according to local forecast!
+
+Adafruit_BMP280 bmp;
 
 LSM303 compass;
 
 char report[80];
 
-int pitch = 0;
-int roll = 0;
-int yaw = 0;
+float pitch = 0;
+float roll = 0;
+float yaw = 0;
+
+float alt = 0;
+float temp = 0;
+float pressure = 0;
 
 int mag_x = 0;
 int mag_y = 0;
@@ -47,28 +58,49 @@ int mag_y = 0;
 void setup()
 {
   Serial.begin(9600);
+//  if (!compass.begin(0x19)) {
+//    Serial.println("Could not find a valid LSM303DLHC accelerometer, check wiring!");
+//    while (1);
+//  }
   Wire.begin();
+  if (!bmp.begin(0x76)) {
+    Serial.println("Could not find a valid BMP280 sensor, check wiring!");
+    while (1);
+  }
+  
   compass.init();
   compass.enableDefault();
 
   compass.m_min = (LSM303::vector<int16_t>){-32767, -32767, -32767};
   compass.m_max = (LSM303::vector<int16_t>){+32767, +32767, +32767};
 
+  /* Default settings from datasheet. */
+  bmp.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */
   
 }
 
 void loop()
 {
-  SimpleKalmanFilter simpleKalmanFilter(0.05, 0.05, 0.01);
+//  SimpleKalmanFilter simpleKalmanFilter(0.05, 0.05, 0.01);
+  alt = bmp.readAltitude(SEALEVELPRESSURE_HPA); //in m
+  temp = bmp.readTemperature(); //*C
+  pressure = bmp.readPressure(); // Pa
+
 //  clock_t start = clock();
   compass.read();
 
-  snprintf(report, sizeof(report), "%6d %6d %6d %6d %6d %6d  ",
-    compass.a.x, compass.a.y, compass.a.z,
-    pitch, roll, yaw);
-    compass.a.x = simpleKalmanFilter.updateEstimate(compass.a.x);
-    compass.a.y = simpleKalmanFilter.updateEstimate(compass.a.y);
-    compass.a.z = simpleKalmanFilter.updateEstimate(compass.a.z);
+//  snprintf(report, sizeof(report), "%6d %6d %6d %6d %6d %6d %6d %6d   ",
+//    compass.a.x, compass.a.y, alt,
+//    pitch, roll, yaw, 
+//    temp, pressure);
+    Serial.println(compass.a.x, compass.a.y); Serial.print(alt, pitch, roll, yaw, temp, pressure);
+//    compass.a.x = simpleKalmanFilter.updateEstimate(compass.a.x);
+//    compass.a.y = simpleKalmanFilter.updateEstimate(compass.a.y);
+//    compass.a.z = simpleKalmanFilter.updateEstimate(compass.a.z);
 //    compass.m.x = simpleKalmanFilter.updateEstimate(compass.m.x);
 //    compass.m.y = simpleKalmanFilter.updateEstimate(compass.m.y);
 //    compass.m.z = simpleKalmanFilter.updateEstimate(compass.m.z);
@@ -79,9 +111,9 @@ void loop()
 //    mag_y = compass.m.y * cos(roll) - compass.m.z * sin(roll);
     yaw = compass.heading(); //180 * atan2(-mag_y,mag_x)/M_PI;
 
-    pitch = simpleKalmanFilter.updateEstimate(pitch);
-    roll = simpleKalmanFilter.updateEstimate(roll);
-    yaw = simpleKalmanFilter.updateEstimate(yaw);
+//    pitch = simpleKalmanFilter.updateEstimate(pitch);
+//    roll = simpleKalmanFilter.updateEstimate(roll);
+//    yaw = simpleKalmanFilter.updateEstimate(yaw);
 
     
     
