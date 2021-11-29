@@ -6,9 +6,7 @@ import math
 
 import time
 
-import config as cfg
-
-data = Path(r'cfg.address')
+data = Path(r'data.txt')
 
 f = open(data, "r")
 
