@@ -35,11 +35,11 @@ t = 0.102 #time between readings
 
 sphereVector = vector(0,0,0)
 
-sphere1 = sphere(pos = sphereVector, radius = 1, color = color.orange, make_trail=True)
+sphere1 = sphere(pos = sphereVector, radius = 3, color = color.orange, make_trail=True)
 
-xarr = arrow(pos=sphere1.pos, axis=vector(accXx,0,0), shaftwidth = .25, headwidth = 0.3, color=color.red, round=True) 
-yarr = arrow(pos=sphere1.pos, axis=vector(0,accXy,0), shaftwidth = .25, headwidth = 0.3, color=color.green, round=True) 
-zarr = arrow(pos=sphere1.pos, axis=vector(0,0,accXz), shaftwidth = .25, headwidth = 0.3, color=color.blue, round=True) 
+xarr = arrow(pos=sphere1.pos, axis=vector(accXx,0,0), shaftwidth = .75, headwidth = 0.5, color=color.red, round=True) 
+yarr = arrow(pos=sphere1.pos, axis=vector(0,accXy,0), shaftwidth = .75, headwidth = 0.5, color=color.green, round=True) 
+zarr = arrow(pos=sphere1.pos, axis=vector(0,0,accXz), shaftwidth = .75, headwidth = 0.5, color=color.blue, round=True) 
 
 
 # sample of data: "  -1184   3120 -15824"
