@@ -6,7 +6,9 @@ import math
 
 import time
 
-data = Path(r'C:\Users\denki\OneDrive\CODE\Python\VPython\data.txt')
+import config as cfg
+
+data = Path(r'cfg.address')
 
 f = open(data, "r")
 
