@@ -35,7 +35,7 @@ sphereVector = vector(0,0,0)
 
 sphere1 = sphere(pos = sphereVector, radius = 0.5, color = color.orange, make_trail=True)
 
-# arrow1 = arrow(pos = sphereVector, axis = vector(+dx, +dy, +dz), color = color.red)
+varr = arrow(pos=sphere1.pos, axis=vector(sx+3,sy+3,sz+3), color=color.yellow, round=True) 
 
 # sample of data: "  -1184   3120 -15824"
 
@@ -125,13 +125,17 @@ for x in f:
     uz = uz + accXz
 
 
-    sphereVector.x = sx
-    sphereVector.y = sy
-    sphereVector.z = sz
+    sphere1.pos = vector(sx, sy, sz)
+    varr.pos = vector(sx, sy, sz)
+    varr.axis = vector(ux,uy,uz)
 
-    sphere1.pos = sphereVector
+    # sphereVector.x = sx
+    # sphereVector.y = sy
+    # sphereVector.z = sz
+
+    # sphere1.pos = sphereVector
     # arrow1.pos = sphereVector
-    scene.center = sphereVector
+    scene.center = sphere1.pos
 
     print(sx, sy, sz, pitch, roll, yaw)
     time.sleep(0.05)
