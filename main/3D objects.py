@@ -31,16 +31,28 @@ accXy = 0
 accXz = 0
 
 t = 0.102 #time between readings
+y = 0 #total time
 
-
+scene = canvas(width = 1000, height = 1000, background = color.white, align = "left")
 sphereVector = vector(0,0,0)
 
 sphere1 = sphere(pos = sphereVector, radius = 3, color = color.orange, make_trail=True)
 
-xarr = arrow(pos=sphere1.pos, axis=vector(accXx,0,0), shaftwidth = .75, headwidth = 0.5, color=color.red, round=True) 
-yarr = arrow(pos=sphere1.pos, axis=vector(0,accXy,0), shaftwidth = .75, headwidth = 0.5, color=color.green, round=True) 
-zarr = arrow(pos=sphere1.pos, axis=vector(0,0,accXz), shaftwidth = .75, headwidth = 0.5, color=color.blue, round=True) 
+xarr = arrow(pos=sphere1.pos, axis=vector(accXx,0,0), shaftwidth = .75, headwidth = 1, color=color.red, round=True) 
+yarr = arrow(pos=sphere1.pos, axis=vector(0,accXy,0), shaftwidth = .75, headwidth = 1, color=color.green, round=True) 
+zarr = arrow(pos=sphere1.pos, axis=vector(0,0,accXz), shaftwidth = .75, headwidth = 1, color=color.blue, round=True) 
 
+g1 = graph(width=800,height=200,title='X acceleration', fast=False, align = "right")
+f1 = gcurve(color = color.red) # graphics curve x
+
+g12 = graph(width=800, height=200, title='X displacement', fast=False, align = "right")
+f12 = gcurve(color = color.yellow) 
+
+g2 = graph(width=800,height=200,title='Y acceleration', fast=False, align = "right")
+f2 = gcurve(color = color.green) #graphics curve y
+
+g22 = graph(width=800, height=200, title='Y displacement', fast=False, align = "right")
+f22 = gcurve(color = color.orange)
 
 # sample of data: "  -1184   3120 -15824"
 
@@ -114,6 +126,7 @@ def filteredLine(line):
     accXx = accX #(float(accX)*cos(math.radians(float(pitch)))*cos(math.radians(float(yaw))))
     accXz = accZ #(float(accX)*cos(math.radians(float(pitch)))*sin(math.radians(float(yaw))))
 
+
 for x in f:
     filteredLine(x)
     # sphereVector = vector(int(accX), int(accY), int(accZ))  
@@ -127,6 +140,10 @@ for x in f:
     uy = uy + accXy*t
     uz = uz + accXz*t
 
+    f1.plot(y, accXx)
+    f12.plot(y, sx)
+    f2.plot(y, accXy)
+    f22.plot(y, sy)
 
     sphere1.pos = vector(sx, sy, sz)
 
@@ -138,6 +155,7 @@ for x in f:
     yarr.axis = vector(0,accXy*t,0)
     zarr.axis = vector(0,0,accXz*t)
     
+    y = y + t
 
     # sphereVector.x = sx
     # sphereVector.y = sy
