@@ -31,7 +31,7 @@ at this FS setting, so the value of -1009 corresponds to -1009 * 1 =
 
 #include <stdio.h>
 #include <time.h>
-//#include <SimpleKalmanFilter.h>
+#include <SimpleKalmanFilter.h>
 
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
@@ -50,7 +50,7 @@ float yaw = 0;
 
 float alt = 0;
 float temp = 0;
-float pressure = 0;
+int pressure = 0;
 
 int mag_x = 0;
 int mag_y = 0;
@@ -85,7 +85,7 @@ void setup()
 
 void loop()
 {
-//  SimpleKalmanFilter simpleKalmanFilter(0.05, 0.05, 0.01);
+  SimpleKalmanFilter simpleKalmanFilter(0.05, 0.05, 0.01);
   alt = bmp.readAltitude(SEALEVELPRESSURE_HPA); //in m
   temp = bmp.readTemperature(); //*C
   pressure = bmp.readPressure(); // Pa
@@ -93,14 +93,14 @@ void loop()
 //  clock_t start = clock();
   compass.read();
 
-//  snprintf(report, sizeof(report), "%6d %6d %6d %6d %6d %6d %6d %6d   ",
-//    compass.a.x, compass.a.y, alt,
-//    pitch, roll, yaw, 
-//    temp, pressure);
-    Serial.println(compass.a.x, compass.a.y); Serial.print(alt, pitch, roll, yaw, temp, pressure);
-//    compass.a.x = simpleKalmanFilter.updateEstimate(compass.a.x);
-//    compass.a.y = simpleKalmanFilter.updateEstimate(compass.a.y);
-//    compass.a.z = simpleKalmanFilter.updateEstimate(compass.a.z);
+  snprintf(report, sizeof(report), "%6d %6d %6d %'2f %'2f %'2f %'2f %'2f   ",
+    compass.a.x, compass.a.y, compass.a.z,
+    alt, pitch, roll, 
+    yaw, temp);
+//    Serial.println(compass.a.x, compass.a.y); Serial.print(alt, pitch, roll, yaw, temp, pressure);
+    compass.a.x = simpleKalmanFilter.updateEstimate(compass.a.x);
+    compass.a.y = simpleKalmanFilter.updateEstimate(compass.a.y);
+    compass.a.z = simpleKalmanFilter.updateEstimate(compass.a.z);
 //    compass.m.x = simpleKalmanFilter.updateEstimate(compass.m.x);
 //    compass.m.y = simpleKalmanFilter.updateEstimate(compass.m.y);
 //    compass.m.z = simpleKalmanFilter.updateEstimate(compass.m.z);
@@ -111,9 +111,9 @@ void loop()
 //    mag_y = compass.m.y * cos(roll) - compass.m.z * sin(roll);
     yaw = compass.heading(); //180 * atan2(-mag_y,mag_x)/M_PI;
 
-//    pitch = simpleKalmanFilter.updateEstimate(pitch);
-//    roll = simpleKalmanFilter.updateEstimate(roll);
-//    yaw = simpleKalmanFilter.updateEstimate(yaw);
+    pitch = simpleKalmanFilter.updateEstimate(pitch);
+    roll = simpleKalmanFilter.updateEstimate(roll);
+    yaw = simpleKalmanFilter.updateEstimate(yaw);
 
     
     
