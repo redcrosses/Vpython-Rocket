@@ -63,7 +63,7 @@ f22 = gcurve(color = color.orange)
 g3 = graph(width=800, height=200, title='Z Acceleration', fast=False, align = "right")
 f3 = gcurve(color = color.purple)
 
-g32 = graph(width=800, height=200, title='Z displacement', fast=False, align = "right")
+g32 = graph(width=800, height=200, title='Altitude', fast=False, align = "right")
 f32 = gcurve(color = color.black)
 
 # sample of data: "  -1184   3120 -15824"
@@ -82,12 +82,13 @@ def filteredLine(line):
     global accXx
     global accXy
     global accXz
+    global alt
     
     accX = ""
     accY = ""
     accZ = ""
 
-    
+    alt = ""
 
     pitch = ""
     roll = ""
@@ -113,13 +114,16 @@ def filteredLine(line):
         if(char != " " and counter == 2): # assigns the Z in the model
             accZ = accZ + char
 
-        if(char != " " and counter == 3): # assigns the pitch
+        if(char != " " and counter == 3): # assigns the altitude
+            alt = alt + char
+        
+        if(char != " " and counter == 4): # assigns the pitch
             pitch = pitch + char
         
-        if(char != " " and counter == 4): # assigns the roll
+        if(char != " " and counter == 5): # assigns the roll
             roll = roll + char
-        
-        if(char != " " and counter == 5): # assigns the yaw
+
+        if(char != " " and counter == 6): # assigns the yaw
             yaw = yaw + char
             
         # conversion factor of 16, because the lowest 4 bits of the accelerometer's readings are 0.
@@ -158,24 +162,24 @@ for x in f:
     f2.plot(y, accY)
     f22.plot(y, sy)
     f3.plot(y, accZ)
-    f32.plot(y, sz)
+    f32.plot(y, float(alt)*100)
 
-    xarr.pos = vector(sx, sy, sz)
-    yarr.pos = vector(sx, sy, sz)
-    zarr.pos = vector(sx, sy, sz)
+    
 
     # if int(timerun) % 2 == 0:
     #     rocket.axis = rocket.pos
 
-    rocket.pos = vector(sx, sy, sz)
+    rocket.pos = vector(sx, float(alt)*100, sy )
 
-    
+    xarr.pos = rocket.pos
+    yarr.pos = rocket.pos
+    zarr.pos = rocket.pos
     
     
 
     xarr.axis = vector(accXx*t,0,0)
-    yarr.axis = vector(0,accXy*t,0)
-    zarr.axis = vector(0,0,accXz*t)
+    yarr.axis = vector(0,0,accXz*t)
+    zarr.axis = vector(0,accXy*t,0)
     
     y = y + t
     
@@ -187,7 +191,7 @@ for x in f:
     # rocket.pos = rocketVector
     # arrow1.pos = rocketVector
     scene.camera.follow(rocket)
-
+    
 
     print(sx, sy, sz, pitch, roll, yaw)
     time.sleep(t)
