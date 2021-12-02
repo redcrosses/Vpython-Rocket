@@ -40,7 +40,7 @@ l = 5 #length of rocket element
 
 rocketVector = vector(0,0,0)
 previousVector = vector(0,0,0)
-rocket = box(pos = rocketVector, height = 3, width = 3, axis = vector(3, 0, 0) , color = color.orange, make_trail=True)
+rocket = box(pos = rocketVector, height = 3, width = 3, length = 6, axis = vector(3, 0, 0) , color = color.orange, make_trail=True)
 
 
 
@@ -163,11 +163,6 @@ for x in f:
     f22.plot(y, sy)
     f3.plot(y, accZ)
     f32.plot(y, float(alt)*100)
-
-    
-
-    # if int(timerun) % 2 == 0:
-    #     rocket.axis = rocket.pos
 
     rocket.pos = vector(sx, float(alt)*100, sy )
 
