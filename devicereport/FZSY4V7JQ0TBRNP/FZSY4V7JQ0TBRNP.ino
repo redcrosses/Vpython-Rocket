@@ -11,10 +11,10 @@
 #include "Wire.h"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LSM303.h>
-#include <LiquidCrystal.h>
+//#include <LiquidCrystal.h>
 
 Adafruit_LSM303 lsm;
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+//LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 float Mx, My, Mz; // Raw Magnetometer measurements
 float Mxc, Myc, Mzc; // Calibrated Magnetometer measurements
@@ -25,7 +25,7 @@ float Ax, Ay, Az; // Raw Accelerometer measurments
 float Axc, Ayc, Azc;  // Calibrated Accelerometer mesurements
 float Axcn, Aycn, Azcn; // Normalized Accelerometer measurements
 
-https://content.instructables.com/ORIG/FGL/HY0Y/JPX5CDGB/FGLHY0YJPX5CDGB.jpg?auto=webp&frame=1&fit=bounds&md=23ee8193b659d7d3d28443d61348c5c8
+//https://content.instructables.com/ORIG/FGL/HY0Y/JPX5CDGB/FGLHY0YJPX5CDGB.jpg?auto=webp&frame=1&fit=bounds&md=23ee8193b659d7d3d28443d61348c5c8
 float norm_a, norm_m;
 
 double pitch, roll;
@@ -59,7 +59,7 @@ void setup()
   Serial.begin(9600);
   Wire.begin();
   lsm.begin();
-  lcd.begin(16, 2);
+//  lcd.begin(16, 2);
 }
 
 void loop()
@@ -150,61 +150,50 @@ void loop()
   Serial.flush();
 
   // Display raw magnetometer values
-  Serial.println("Magnetometer raw measurements");
-  Serial.print("Mx: "); Serial.print(Mx); Serial.print("; ");
-  Serial.print("My: "); Serial.print(My); Serial.print("; ");
-  Serial.print("Mz: "); Serial.println(Mz);
+//  Serial.println("Magnetometer raw measurements");
+//  Serial.print("Mx: "); Serial.print(Mx); Serial.print("; ");
+//  Serial.print("My: "); Serial.print(My); Serial.print("; ");
+//  Serial.print("Mz: "); Serial.print(Mz); Serial.print("; ");
 
   // Display calibrated magnetometer values
-  Serial.println("Magnetometer calibrated measurements");
-  Serial.print("Mxc: "); Serial.print(Mxc); Serial.print("; ");
-  Serial.print("Myc: "); Serial.print(Myc); Serial.print("; ");
-  Serial.print("Mzc: "); Serial.println(Mzc);
-  Serial.println("--------------------------------------");
+//  Serial.println("Magnetometer calibrated measurements");
+//  Serial.print(Mxc); Serial.print(" ");
+//  Serial.print(Myc); Serial.print(" ");
+//  Serial.print(Mzc); Serial.print(" ");
+//  Serial.println("--------------------------------------");
 
   // Display raw accelerometer measurements in milliG
-  Serial.println("Accelerometer raw measurements");
-  Serial.print("Ax: "); Serial.print(Ax); Serial.print("; ");
-  Serial.print("Ay: "); Serial.print(Ay); Serial.print("; ");
-  Serial.print("Az: "); Serial.println(Az);
+//  Serial.println("Accelerometer raw measurements");
+//  Serial.print("Ax: "); Serial.print(Ax); Serial.print("; ");
+//  Serial.print("Ay: "); Serial.print(Ay); Serial.print("; ");
+//  Serial.print("Az: "); Serial.print(Az); Serial.print("; ");
 
   // Display calibrated accelerometer measurements in milliG
-  Serial.println("Accelerometer calibrated measurements");
-  Serial.print("Axc: "); Serial.print(Axc); Serial.print("; ");
-  Serial.print("Ayc: "); Serial.print(Ayc); Serial.print("; ");
-  Serial.print("Azc: "); Serial.println(Azc);
-  Serial.println("--------------------------------------");
+//  Serial.println("Accelerometer calibrated measurements");
+  Serial.print(Axc); Serial.print(" ");
+  Serial.print(Ayc); Serial.print(" ");
+  Serial.print(Azc); Serial.print(" ");
+//  Serial.println("--------------------------------------");
 
   // Display Heading in degrees North = 0°--> 360° turning clockwise
-  Serial.print ("Heading raw: "); Serial.println (heading);
-  Serial.print ("Heading calibrated: "); Serial.println (headingc);
-  Serial.print ("Heading tilt compensated: "); Serial.println (headingct);
-  Serial.println("--------------------------------------");
+//  Serial.print ("Heading raw: "); Serial.print (heading);
+//  Serial.print ("Heading calibrated: "); Serial.print (headingc);
+//  Serial.print (headingct); Serial.print(" ");
+//  Serial.println("--------------------------------------");
 
 
   // Display Tilt angle in degrees
-  Serial.print("Tilt raw: "); Serial.println((double)atan2((double)fabs(Az), (double)Ax) * 180 / PI);
-  Serial.print("Tilt calibrated: "); Serial.println(tiltcnf);
+//  Serial.print("Tilt raw: "); Serial.print((double)atan2((double)fabs(Az), (double)Ax) * 180 / PI);
+  Serial.print(tiltcnf); Serial.print(" ");
 
   // Display Pitch and Roll angles in degrees
-  Serial.print ("Pitch: "); Serial.println (pitch_print);
-  Serial.print ("Roll: "); Serial.println (roll_print);
-  Serial.println("--------------------------------------");
-  Serial.println();
-  Serial.println();
+  Serial.print (pitch_print); Serial.print(" ");
+  Serial.print (roll_print); Serial.println(" ");
+//  Serial.println("--------------------------------------");
+//  Serial.println();
+//  Serial.println();
 
-  // Display values on LCD
-  lcd.setCursor(0, 0);
-  lcd.print("Heading:");
-  lcd.setCursor(9, 0);
-  lcd.print(headingct);
-  lcd.setCursor(3, 1);
-  lcd.print ("Tilt:");
-  lcd.setCursor(9, 1);
-  lcd.print (tiltcnf);
-  //lcd.clear();
 
-  delay(1000);
 }
 
 // Read the raw measurements
