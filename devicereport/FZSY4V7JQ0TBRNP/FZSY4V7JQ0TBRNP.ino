@@ -11,6 +11,8 @@
 #include "Wire.h"
 #include <Adafruit_Sensor.h>
 #include <Adafruit_LSM303.h>
+
+#include <time.h>
 //#include <LiquidCrystal.h>
 
 Adafruit_LSM303 lsm;
@@ -64,6 +66,7 @@ void setup()
 
 void loop()
 {
+  clock_t start = clock();
   lsm.read();
 
   float values_from_magnetometer[3];
@@ -149,51 +152,26 @@ void loop()
 
   Serial.flush();
 
-  // Display raw magnetometer values
-//  Serial.println("Magnetometer raw measurements");
-//  Serial.print("Mx: "); Serial.print(Mx); Serial.print("; ");
-//  Serial.print("My: "); Serial.print(My); Serial.print("; ");
-//  Serial.print("Mz: "); Serial.print(Mz); Serial.print("; ");
-
-  // Display calibrated magnetometer values
-//  Serial.println("Magnetometer calibrated measurements");
-//  Serial.print(Mxc); Serial.print(" ");
-//  Serial.print(Myc); Serial.print(" ");
-//  Serial.print(Mzc); Serial.print(" ");
-//  Serial.println("--------------------------------------");
-
-  // Display raw accelerometer measurements in milliG
-//  Serial.println("Accelerometer raw measurements");
-//  Serial.print("Ax: "); Serial.print(Ax); Serial.print("; ");
-//  Serial.print("Ay: "); Serial.print(Ay); Serial.print("; ");
-//  Serial.print("Az: "); Serial.print(Az); Serial.print("; ");
-
   // Display calibrated accelerometer measurements in milliG
-//  Serial.println("Accelerometer calibrated measurements");
   Serial.print(Axc); Serial.print(" ");
   Serial.print(Ayc); Serial.print(" ");
   Serial.print(Azc); Serial.print(" ");
-//  Serial.println("--------------------------------------");
-
-  // Display Heading in degrees North = 0°--> 360° turning clockwise
-//  Serial.print ("Heading raw: "); Serial.print (heading);
-//  Serial.print ("Heading calibrated: "); Serial.print (headingc);
-//  Serial.print (headingct); Serial.print(" ");
-//  Serial.println("--------------------------------------");
-
 
   // Display Tilt angle in degrees
-//  Serial.print("Tilt raw: "); Serial.print((double)atan2((double)fabs(Az), (double)Ax) * 180 / PI);
-  Serial.print(tiltcnf); Serial.print(" ");
+  // Serial.print(tiltcnf); Serial.print(" ");
 
+  // Display Heading in degrees North = 0°--> 360° turning clockwise
+  Serial.print (headingct); Serial.print(" ");
+  
   // Display Pitch and Roll angles in degrees
   Serial.print (pitch_print); Serial.print(" ");
-  Serial.print (roll_print); Serial.println(" ");
-//  Serial.println("--------------------------------------");
-//  Serial.println();
-//  Serial.println();
+  Serial.print (roll_print); Serial.print(" ");
 
+  printf(" %.3f %.3f %.3f %.3f %.3f %.3f ", Axc, Ayc, Azc, headingct, pitch_print, roll_print);
 
+  clock_t end = clock();
+  double elapsed = double(end - start)/CLOCKS_PER_SEC;
+  printf("%.3f \n", elapsed);
 }
 
 // Read the raw measurements

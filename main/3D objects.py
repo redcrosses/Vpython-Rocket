@@ -30,7 +30,7 @@ accXx = 0
 accXy = 0
 accXz = 0
 
-t = 0.102 #time between readings
+t = 0.2 #time between readings
 y = 0 #total time
 
 scene = canvas(width = 1000, height = 1000, background = color.white, align = "left")
@@ -63,8 +63,8 @@ f22 = gcurve(color = color.orange)
 g3 = graph(width=800, height=200, title='Z Acceleration', fast=False, align = "right")
 f3 = gcurve(color = color.purple)
 
-g32 = graph(width=800, height=200, title='Altitude', fast=False, align = "right")
-f32 = gcurve(color = color.black)
+# g32 = graph(width=800, height=200, title='Altitude', fast=False, align = "right")
+# f32 = gcurve(color = color.black)
 
 # sample of data: "  -1184   3120 -15824"
 
@@ -82,13 +82,13 @@ def filteredLine(line):
     global accXx
     global accXy
     global accXz
-    global alt
+    # global alt
     
     accX = ""
     accY = ""
     accZ = ""
 
-    alt = ""
+    # alt = ""
 
     pitch = ""
     roll = ""
@@ -105,34 +105,35 @@ def filteredLine(line):
         else:
             previous = char
         
-        if(char != " " and counter == 0): #assigns the X in the model
+        if(char != " " and counter == 0): #assigns the accX in the model
             accX = accX + char
         
-        if(char != " " and counter == 1): #assigns the Y in the model
+        if(char != " " and counter == 1): #assigns the accY in the model
             accY = accY + char
 
-        if(char != " " and counter == 2): # assigns the Z in the model
+        if(char != " " and counter == 2): # assigns the accZ in the model
             accZ = accZ + char
 
-        if(char != " " and counter == 3): # assigns the altitude
-            alt = alt + char
+        # if(char != " " and counter == 3): # assigns the altitude
+        #     alt = alt + char
         
-        if(char != " " and counter == 4): # assigns the pitch
+        if(char != " " and counter == 3): # assigns the pitch
             pitch = pitch + char
         
-        if(char != " " and counter == 5): # assigns the roll
+        if(char != " " and counter == 4): # assigns the roll
             roll = roll + char
 
-        if(char != " " and counter == 6): # assigns the yaw
+        if(char != " " and counter == 5): # assigns the yaw
             yaw = yaw + char
-            
+        
+    
         # conversion factor of 16, because the lowest 4 bits of the accelerometer's readings are 0.
 
 
-    accX = (float(accX) / -16 / 1000 * 9.81) - previousx #m/s^2
-    accY = (float(accY) / -16 / 1000 * 9.81) - previousy #m/s^2
+    accX = float(accX) #(float(accX) / -16 / 1000 * 9.81) - previousx #m/s^2
+    accY = float(accY) #(float(accY) / -16 / 1000 * 9.81) - previousy #m/s^2
 
-    accZ = (float(accZ) / -16 / 1000 * 9.81) - previousz #m/s^2
+    accZ = float(accZ) #(float(accZ) / -16 / 1000 * 9.81) - previousz #m/s^2
 
     previousx = accX
     previousy = accY
@@ -162,9 +163,9 @@ for x in f:
     f2.plot(y, accY)
     f22.plot(y, sy)
     f3.plot(y, accZ)
-    f32.plot(y, float(alt)*100)
+    # f32.plot(y, float(alt)*100)
 
-    rocket.pos = vector(sx, float(alt)*100, sy )
+    rocket.pos = vector(sx, 0, sy )
 
     xarr.pos = rocket.pos
     yarr.pos = rocket.pos
