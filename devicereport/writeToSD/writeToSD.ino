@@ -20,7 +20,12 @@
  
 #include <SPI.h>
 #include <SD.h>
- 
+
+#define SS 5
+#define MOSI 23
+#define MISO 19
+#define SCK 18
+
 File myFile;
  
 void setup() {
