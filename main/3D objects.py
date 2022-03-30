@@ -192,5 +192,8 @@ for x in f:
     print(sx, sy, sz, pitch, roll, yaw)
     time.sleep(t)
     
-
-
+    # def calculatePosition(x, y, z, pitch, roll, yaw):
+    #     x = x * math.cos(math.radians(float(pitch))) * math.cos(math.radians(float(yaw)))
+    #     y = y * math.cos(math.radians(float(pitch)))
+    #     z = z * math.cos(math.radians(float(pitch))) * math.sin(math.radians(float(yaw)))
+    #     return x, y, z
